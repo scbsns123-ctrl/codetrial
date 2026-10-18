@@ -727,3 +727,16 @@ fn a_data_dir_launch_takes_its_settings_from_flags_not_the_environment() {
         ["127.0.0.1:3101"]
     );
 }
+
+#[test]
+fn task_mode_runs_only_on_a_private_server_that_neither_records_nor_shares_a_room() {
+    assert!(super::task_mode_allowed(None, false, false));
+    for (reachable, fixed_room, recording) in [
+        (Some(super::Reachable::Address), false, false),
+        (Some(super::Reachable::DeclaredProxy), false, false),
+        (None, true, false),
+        (None, false, true),
+    ] {
+        assert!(!super::task_mode_allowed(reachable, fixed_room, recording));
+    }
+}
