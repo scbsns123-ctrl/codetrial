@@ -578,6 +578,14 @@ async fn a_replacement_is_opened_without_the_learner_s_code_and_briefed_with_it(
             .recovery_instructions()
             .contains("LEARNER_SECRET_MARKER")
     );
+    let starter = session.task.exercise.starter(session.task.language());
+    assert_eq!(
+        session.recovery_instructions(),
+        session
+            .task
+            .prompt(Phase::Work, None, starter.unwrap_or(""))
+            .unwrap()
+    );
     assert!(session.provider_context().contains("LEARNER_SECRET_MARKER"));
     assert!(session.learner_state().contains("LEARNER_SECRET_MARKER"));
     let (mut live, mut frames) = live_fixture(&session.task).await;
